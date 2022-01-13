@@ -1,8 +1,12 @@
 package com.gmail.pavlovsv93.notepadx.ui.list;
 
+import static com.gmail.pavlovsv93.notepadx.ui.addNote.AddNoteSheetDialogFragment.KEY_ADD_NOTE;
+
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -11,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +33,7 @@ public class NotesListFragment extends Fragment implements NotesView {
     public static final String KEY_NOTE = "KEY_NOTE";
 
     private ProgressBar progress;
+    private ImageView imageView;
 
     private RecyclerView recyclerList;
 
@@ -57,9 +63,6 @@ public class NotesListFragment extends Fragment implements NotesView {
             @Override
             public void onClick(Notes note) {
                 Toast.makeText(requireContext(), note.getTitle().toString(), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(requireContext(), NoteDetailsActivity.class);
-//                intent.putExtra(NoteDetailsActivity.EXTRA_NOTE, note);
-//                startActivity(intent);
 
                 Bundle data = new Bundle();
                 data.putParcelable(ARG_NOTE, note);
@@ -67,6 +70,7 @@ public class NotesListFragment extends Fragment implements NotesView {
 
             }
         });
+
     }
 
     @Override
@@ -74,6 +78,7 @@ public class NotesListFragment extends Fragment implements NotesView {
         super.onViewCreated(view, savedInstanceState);
 
         progress = view.findViewById(R.id.progress);
+        imageView = view.findViewById(R.id.image_empty);
 
         recyclerList = view.findViewById(R.id.recycler_list);
         recyclerList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
@@ -84,9 +89,20 @@ public class NotesListFragment extends Fragment implements NotesView {
             @Override
             public void onClick(View v) {
                 AddNoteSheetDialogFragment.newInstance().show(getParentFragmentManager(), AddNoteSheetDialogFragment.TAG);
+            }
+        });
+
+        getParentFragmentManager().setFragmentResultListener(AddNoteSheetDialogFragment.KEY_ADD_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                Notes note = result.getParcelable(AddNoteSheetDialogFragment.ARG_ADD_NOTE);
+
+                presenter.noteAdd(note);
 
             }
         });
+
     }
 
     @Override
@@ -108,5 +124,22 @@ public class NotesListFragment extends Fragment implements NotesView {
     @Override
     public void showError(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void showEmpty() {
+        imageView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmpty() {
+        imageView.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void noteAddView(Notes note) {
+        adapter.addNotes(note);
+        adapter.notifyDataSetChanged();
     }
 }

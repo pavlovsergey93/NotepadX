@@ -1,5 +1,7 @@
 package com.gmail.pavlovsv93.notepadx.ui.addNote;
 
+import android.widget.Toast;
+
 import com.gmail.pavlovsv93.notepadx.domain.Callback;
 import com.gmail.pavlovsv93.notepadx.domain.Notes;
 import com.gmail.pavlovsv93.notepadx.domain.NotesRepository;

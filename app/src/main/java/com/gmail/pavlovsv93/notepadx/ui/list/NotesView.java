@@ -12,4 +12,7 @@ public interface NotesView {
     void highProgress();
     void showNotes(List<Notes> notesList);
     void showError(String message);
+    void showEmpty();
+    void hideEmpty();
+    void noteAddView(Notes note);
 }

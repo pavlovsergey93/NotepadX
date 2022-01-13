@@ -14,14 +14,20 @@ import com.gmail.pavlovsv93.notepadx.domain.NotesRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class InMemoryNotesRepository implements NotesRepository {
+
+    private static final String KEY_TITLE = "KEY_TITLE";
+    private static final String KEY_MESSAGE = "KEY_MESSAGE";
+    private static final String KEY_TIME = "KEY_TIME";
 
     public static final NotesRepository INSTANCE = new InMemoryNotesRepository();
 
@@ -31,18 +37,16 @@ public class InMemoryNotesRepository implements NotesRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private InMemoryNotesRepository() {
-        for (int i = 0; i < 1; i++) {
-            notesList.add(new Notes(UUID.randomUUID().toString(), "Заголовок0 lfjdalfdslkfha;jdsgh;adfhgjlhdfjgk;dfhag;jkdfhakghfdkjaghdfjkhgjkahgdf"+i, "Сообщение fdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgds"+i, timeNow(), false));
+        for (int i = 0; i < 3; i++) {
+            notesList.add(new Notes(UUID.randomUUID().toString(), "Заголовок "+ i +" lfjdalfdslkfha;jdsgh;adfhgjlhdfjgk;dfhag;jkdfhakghfdkjaghdfjkhgjkahgdf"+i, "Сообщение fdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgdsfdklflj;adfgl;hadf;jlghrkj;htiquerhgodfljagbkjadfgjhadfjgkdshgkjadhkjghsjkhgds"+i, timeNow(), false));
         }
     }
 
     @Override
     public void getNotesAll(Callback<List<Notes>> callback) {
-
         executor.execute(new Runnable() {
             @Override
             public void run() {
-
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -58,6 +62,7 @@ public class InMemoryNotesRepository implements NotesRepository {
     @Override
     public void addNewNote(String title, String massage, Callback<Notes> callback) {
         executor.execute(new Runnable() {
+
             @Override
             public void run() {
                 handler.post(new Runnable() {
@@ -66,6 +71,7 @@ public class InMemoryNotesRepository implements NotesRepository {
                     public void run() {
                         String id = UUID.randomUUID().toString();
                         String time = timeNow();
+
                         Notes note = new Notes(id, title, massage, time, false);
 
                         notesList.add(note);

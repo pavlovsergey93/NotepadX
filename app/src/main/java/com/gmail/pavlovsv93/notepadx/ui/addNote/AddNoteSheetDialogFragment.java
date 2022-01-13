@@ -2,6 +2,7 @@ package com.gmail.pavlovsv93.notepadx.ui.addNote;
 
 import static com.gmail.pavlovsv93.notepadx.R.layout.fragment_add_note_sheet_dialog;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.gmail.pavlovsv93.notepadx.R;
 import com.gmail.pavlovsv93.notepadx.domain.Notes;
@@ -38,12 +40,13 @@ public class AddNoteSheetDialogFragment extends BottomSheetDialogFragment implem
         return ansd;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new AddNotePresenter(this, RoomRepository.INSTANCE);
-        //presenter = new AddNotePresenter(this, InMemoryNotesRepository.INSTANCE);
+        //presenter = new AddNotePresenter(this, RoomRepository.INSTANCE);
+        presenter = new AddNotePresenter(this, InMemoryNotesRepository.INSTANCE);
     }
 
     @Nullable
@@ -60,6 +63,7 @@ public class AddNoteSheetDialogFragment extends BottomSheetDialogFragment implem
         editTextMassage = view.findViewById(R.id.edit_text_massage);
 
         progressBar = view.findViewById(R.id.progress_sheet_dialog);
+
         btnSheetDialog = view.findViewById(R.id.btn_sheet_dialog);
         btnSheetDialog.setOnClickListener(new View.OnClickListener() {
             @Override

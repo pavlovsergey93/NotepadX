@@ -10,6 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_empty"
+        android:src="@drawable/ic_baseline_note_add_24"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"
@@ -17,6 +27,7 @@
         android:layout_gravity="center"
         android:visibility="gone"
         tools:visibility="visible" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_btn"

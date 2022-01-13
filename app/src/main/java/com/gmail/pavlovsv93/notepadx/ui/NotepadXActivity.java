@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.gmail.pavlovsv93.notepadx.R;
 import com.gmail.pavlovsv93.notepadx.domain.Notes;
-import com.gmail.pavlovsv93.notepadx.ui.details.NoteDetailsFragment;
+import com.gmail.pavlovsv93.notepadx.ui.details.NoteDetailsSheetDialogFragment;
 import com.gmail.pavlovsv93.notepadx.ui.list.NotesListFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -71,7 +71,7 @@ public class NotepadXActivity extends AppCompatActivity {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 secondNote = result.getParcelable(NotesListFragment.ARG_NOTE);
 
-                NoteDetailsFragment.newInstance(secondNote).show(getSupportFragmentManager(), NoteDetailsFragment.TAG);
+                NoteDetailsSheetDialogFragment.newInstance(secondNote).show(getSupportFragmentManager(), NoteDetailsSheetDialogFragment.TAG);
 
 //                Intent intent = new Intent(NotepadXActivity.this, NoteDetailsActivity.class);
 //                intent.putExtra(NoteDetailsActivity.EXTRA_NOTE, secondNote);

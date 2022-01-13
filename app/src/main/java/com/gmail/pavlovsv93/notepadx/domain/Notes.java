@@ -25,7 +25,13 @@ public class Notes implements Parcelable {
         this.done = done;
     }
 
+
     protected Notes(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        massage = in.readString();
+        time = in.readString();
+        done = in.readByte() != 0;
     }
 
     public static final Creator<Notes> CREATOR = new Creator<Notes>() {
@@ -39,15 +45,6 @@ public class Notes implements Parcelable {
             return new Notes[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-    }
 
     public String getTitle() {
         return title;
@@ -83,5 +80,19 @@ public class Notes implements Parcelable {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(massage);
+        dest.writeString(time);
+        dest.writeByte((byte) (done ? 1 : 0));
     }
 }

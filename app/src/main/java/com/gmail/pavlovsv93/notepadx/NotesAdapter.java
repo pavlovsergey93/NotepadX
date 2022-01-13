@@ -21,6 +21,10 @@ import java.util.Locale;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
+    public interface OnClick {
+        void onClick(Notes note);
+    }
+
     private ArrayList<Notes> listData = new ArrayList<>();
 
     private OnClick onClick;
@@ -30,10 +34,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         listData.addAll(notes);
     }
 
+    public int addNotes(Notes note) {
+        listData.add(note);
+        return listData.size();
+    }
+
     @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note, parent, false);
+        View itemView = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.item_note, parent, false);
         return new NoteViewHolder(itemView);
     }
 
@@ -59,9 +70,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public void setOnClick(OnClick onClick) {
         this.onClick = onClick;
     }
-    public interface OnClick{
-        void onClick(Notes note);
-    }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
 
@@ -80,7 +88,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 @Override
                 public void onClick(View v) {
                     Notes note = listData.get(getAdapterPosition());
-                    if(getOnClick() != null) {
+                    if (getOnClick() != null) {
                         getOnClick().onClick(note);
                     }
                 }
