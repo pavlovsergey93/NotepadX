@@ -1,10 +1,10 @@
 package com.gmail.pavlovsv93.notepadx.ui.list;
 
-import static com.gmail.pavlovsv93.notepadx.ui.addNote.AddNoteSheetDialogFragment.KEY_ADD_NOTE;
-
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,6 +35,8 @@ public class NotesListFragment extends Fragment implements NotesView {
     private ProgressBar progress;
     private ImageView imageView;
 
+    private Notes selectNote;
+
     private RecyclerView recyclerList;
 
     private NotesAdapter adapter;
@@ -58,16 +60,18 @@ public class NotesListFragment extends Fragment implements NotesView {
         //presenter = new NotesPresenter(RoomRepository.INSTANCE, this);
         presenter = new NotesPresenter(InMemoryNotesRepository.INSTANCE, this);
 
-        adapter = new NotesAdapter();
+        adapter = new NotesAdapter(this);
         adapter.setOnClick(new NotesAdapter.OnClick() {
             @Override
             public void onClick(Notes note) {
-                Toast.makeText(requireContext(), note.getTitle().toString(), Toast.LENGTH_SHORT).show();
-
                 Bundle data = new Bundle();
                 data.putParcelable(ARG_NOTE, note);
                 getParentFragmentManager().setFragmentResult(KEY_NOTE, data);
+            }
 
+            @Override
+            public void onLongClick(Notes note) {
+                selectNote = note;
             }
         });
 
@@ -106,6 +110,30 @@ public class NotesListFragment extends Fragment implements NotesView {
     }
 
     @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater mi = requireActivity().getMenuInflater();
+        mi.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_context_update:
+                AddNoteSheetDialogFragment.updateInstance(selectNote);
+                return true;
+            case R.id.menu_context_delete:
+
+                return true;
+            case R.id.menu_context_share:
+
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     public void showProgress() {
         progress.setVisibility(View.VISIBLE);
     }
@@ -139,7 +167,14 @@ public class NotesListFragment extends Fragment implements NotesView {
 
     @Override
     public void noteAddView(Notes note) {
-        adapter.addNotes(note);
-        adapter.notifyDataSetChanged();
+        int index = adapter.addNotes(note);
+        recyclerList.smoothScrollToPosition(index-1);
+        adapter.notifyItemInserted(index - 1);
+    }
+
+    @Override
+    public void noteUpdateView(Notes note) {
+        int index = adapter.updateNote(note);
+        adapter.notifyItemInserted(index - 1);
     }
 }

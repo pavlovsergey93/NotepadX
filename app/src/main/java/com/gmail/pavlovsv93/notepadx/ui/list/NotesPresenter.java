@@ -45,4 +45,9 @@ public class NotesPresenter {
         view.noteAddView(note);
         view.hideEmpty();
     }
+
+    public void noteUpdate(Notes note){
+        view.noteUpdateView(note);
+        view.hideEmpty();
+    }
 }

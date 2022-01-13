@@ -15,4 +15,5 @@ public interface NotesView {
     void showEmpty();
     void hideEmpty();
     void noteAddView(Notes note);
+    void noteUpdateView(Notes note);
 }
