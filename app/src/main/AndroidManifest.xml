@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotepadX">
         <activity
-            android:name=".NotepadXActivity"
+            android:name=".ui.NotepadXActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
