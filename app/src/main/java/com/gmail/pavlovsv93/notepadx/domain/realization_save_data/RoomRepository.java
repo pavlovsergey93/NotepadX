@@ -41,7 +41,7 @@ public class RoomRepository implements NotesRepository {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                if(App.getINSTANCE() != null) {
+                if (App.getINSTANCE() != null) {
                     notesRoomList = App.getINSTANCE().noteRoomDao().listNoteAll();
                     for (NoteRoom noteRoom : notesRoomList) {
                         Notes note = new Notes(noteRoom.idNotes,
@@ -91,7 +91,7 @@ public class RoomRepository implements NotesRepository {
     }
 
     @Override
-    public void deleteNote(Notes note) {
+    public void deleteNote(Notes note, Callback<Void> callback) {
         for (NoteRoom noteRoom : notesRoomList) {
             if (noteRoom.idNotes.equals(note.getId())) {
                 App.getINSTANCE().noteRoomDao().deleteNoteRoom(noteRoom);

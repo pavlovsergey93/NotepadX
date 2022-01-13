@@ -21,6 +21,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         this.fragment = fragment;
     }
 
+
+
     public interface OnClick {
         void onClick(Notes note);
         void onLongClick(Notes note);
@@ -50,6 +52,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             }
         }
         return 1;
+    }
+    public int deleteNote(Notes note) {
+        int index = 0;
+        for (int i = 0; i < listData.size(); i++) {
+            if (listData.get(i).getId().equals(note.getId())){
+                index = i;
+                break;
+            }
+        }
+        listData.remove(index);
+        return index;
     }
 
     @NonNull

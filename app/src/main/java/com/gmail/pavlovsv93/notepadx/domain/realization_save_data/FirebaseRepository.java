@@ -23,7 +23,7 @@ public class FirebaseRepository implements NotesRepository {
     }
 
     @Override
-    public void deleteNote(Notes note) {
+    public void deleteNote(Notes note, Callback<Void> callback) {
 
     }
 

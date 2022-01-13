@@ -90,7 +90,26 @@ public class InMemoryNotesRepository implements NotesRepository {
     }
 
     @Override
-    public void deleteNote(Notes note) {
+    public void deleteNote(Notes note, Callback<Void> callback) {
+
+        executor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void run() {
+
+                        notesList.remove(note);
+
+                        callback.onSuccess(null);
+                    }
+                });
+
+            }
+        });
+
 
     }
 

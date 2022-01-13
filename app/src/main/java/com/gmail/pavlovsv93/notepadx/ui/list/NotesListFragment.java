@@ -121,10 +121,10 @@ public class NotesListFragment extends Fragment implements NotesView {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_context_update:
-                AddNoteSheetDialogFragment.updateInstance(selectNote);
+
                 return true;
             case R.id.menu_context_delete:
-
+                presenter.removeNote(selectNote);
                 return true;
             case R.id.menu_context_share:
 
@@ -176,5 +176,11 @@ public class NotesListFragment extends Fragment implements NotesView {
     public void noteUpdateView(Notes note) {
         int index = adapter.updateNote(note);
         adapter.notifyItemInserted(index - 1);
+    }
+
+    @Override
+    public void onNoteRemove(Notes note) {
+        int index = adapter.deleteNote(note);
+        adapter.notifyItemRemoved(index);
     }
 }

@@ -10,7 +10,7 @@ public interface NotesRepository {
 
     void updateNote(Notes note);
 
-    void deleteNote(Notes note);
+    void deleteNote(Notes note, Callback<Void> callback);
 
     void checkDone(Notes note);
 
