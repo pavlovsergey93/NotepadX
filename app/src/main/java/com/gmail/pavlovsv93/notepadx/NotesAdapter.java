@@ -45,14 +45,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     public int updateNote(Notes note) {
+        int index = 0;
         for (int i = 0; i < listData.size(); i++) {
-            if (listData.get(i).getId().equals(note.getId())){
-                listData.set(i,note);
-                return i;
+            if (listData.get(i).getId().toString().equals(note.getId().toString())){
+                index = i;
+                break;
             }
         }
-        return 1;
+        listData.set(index,note);
+        return index;
     }
+
     public int deleteNote(Notes note) {
         int index = 0;
         for (int i = 0; i < listData.size(); i++) {

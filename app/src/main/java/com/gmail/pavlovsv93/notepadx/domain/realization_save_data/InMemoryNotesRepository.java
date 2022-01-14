@@ -62,7 +62,6 @@ public class InMemoryNotesRepository implements NotesRepository {
     @Override
     public void addNewNote(String title, String massage, Callback<Notes> callback) {
         executor.execute(new Runnable() {
-
             @Override
             public void run() {
                 handler.post(new Runnable() {
@@ -85,7 +84,32 @@ public class InMemoryNotesRepository implements NotesRepository {
     }
 
     @Override
-    public void updateNote(Notes note) {
+    public void updateNote(String noteId,String title, String massage, Callback<Notes> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void run() {
+                        Notes updateNote = new Notes();
+                        for (int i = 0; i < notesList.size(); i++){
+                            if(notesList.get(i).getId().equals(noteId)){
+                                updateNote = notesList.get(i);
+                                break;
+                            }
+                        }
+                        updateNote.setTitle(title);
+                        updateNote.setMassage(massage);
+                        String time = R.string.update_room + timeNow();
+                        updateNote.setTime(time);
+
+                        callback.onSuccess(updateNote);
+                    }
+                });
+
+            }
+        });
 
     }
 
@@ -93,7 +117,6 @@ public class InMemoryNotesRepository implements NotesRepository {
     public void deleteNote(Notes note, Callback<Void> callback) {
 
         executor.execute(new Runnable() {
-
             @Override
             public void run() {
                 handler.post(new Runnable() {
@@ -114,7 +137,7 @@ public class InMemoryNotesRepository implements NotesRepository {
     }
 
     @Override
-    public void checkDone(Notes note) {
+    public void checkDone(Notes note, Callback<Void> callback) {
 
     }
 

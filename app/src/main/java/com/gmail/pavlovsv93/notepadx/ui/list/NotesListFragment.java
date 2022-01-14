@@ -23,7 +23,9 @@ import com.gmail.pavlovsv93.notepadx.NotesAdapter;
 import com.gmail.pavlovsv93.notepadx.R;
 import com.gmail.pavlovsv93.notepadx.domain.Notes;
 import com.gmail.pavlovsv93.notepadx.domain.realization_save_data.InMemoryNotesRepository;
+import com.gmail.pavlovsv93.notepadx.ui.addNote.AddNotePresenter;
 import com.gmail.pavlovsv93.notepadx.ui.addNote.AddNoteSheetDialogFragment;
+import com.gmail.pavlovsv93.notepadx.ui.addNote.UpdateNotePresenter;
 
 import java.util.List;
 
@@ -96,13 +98,23 @@ public class NotesListFragment extends Fragment implements NotesView {
             }
         });
 
-        getParentFragmentManager().setFragmentResultListener(AddNoteSheetDialogFragment.KEY_ADD_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(AddNotePresenter.KEY_ADD_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
 
-                Notes note = result.getParcelable(AddNoteSheetDialogFragment.ARG_ADD_NOTE);
+                Notes note = result.getParcelable(AddNotePresenter.ARG_ADD_NOTE);
 
                 presenter.noteAdd(note);
+
+            }
+        });
+        getParentFragmentManager().setFragmentResultListener(UpdateNotePresenter.KEY_UPDATE_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                Notes note = result.getParcelable(UpdateNotePresenter.ARG_UPDATE_NOTE);
+
+                presenter.noteUpdate(note);
 
             }
         });
@@ -121,7 +133,8 @@ public class NotesListFragment extends Fragment implements NotesView {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_context_update:
-
+                AddNoteSheetDialogFragment.updateInstance(selectNote)
+                        .show(getParentFragmentManager(), AddNoteSheetDialogFragment.TAG);
                 return true;
             case R.id.menu_context_delete:
                 presenter.removeNote(selectNote);
@@ -175,7 +188,7 @@ public class NotesListFragment extends Fragment implements NotesView {
     @Override
     public void noteUpdateView(Notes note) {
         int index = adapter.updateNote(note);
-        adapter.notifyItemInserted(index - 1);
+        adapter.notifyItemChanged(index);
     }
 
     @Override

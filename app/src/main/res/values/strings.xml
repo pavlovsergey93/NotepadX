@@ -8,7 +8,7 @@
     <string name="menu_info">Информация</string>
     <string name="menu_image">Изображение</string>
     <string name="details_btn_text">ОК</string>
-    <string name="update_roon">"Изменения: "</string>
+    <string name="update_room">"Изменения: "</string>
     <string name="btn_sheet_dialog_save">Сохранить</string>
     <string name="btn_sheet_dialog_update">Сохранить изменения</string>
     <string name="sheet_dialog_title">Заголовок</string>

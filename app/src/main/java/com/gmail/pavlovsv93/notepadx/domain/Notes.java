@@ -47,6 +47,10 @@ public class Notes implements Parcelable {
         }
     };
 
+    public Notes() {
+
+    }
+
     public String getTitle() {
         return title;
     }

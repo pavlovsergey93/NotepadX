@@ -79,15 +79,8 @@ public class RoomRepository implements NotesRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void updateNote(Notes note) {
-        for (NoteRoom noteRoom : notesRoomList) {
-            if (noteRoom.idNotes.equals(note.getId())) {
-                noteRoom.titleNotes = note.getTitle();
-                noteRoom.massageNotes = note.getMassage();
-                noteRoom.doneNotes = note.isDone();
-                noteRoom.timeNotes = R.string.update_roon + timeNow();
-            }
-        }
+    public void updateNote(String noteId,String title, String massage, Callback<Notes> callback) {
+
     }
 
     @Override
@@ -100,7 +93,7 @@ public class RoomRepository implements NotesRepository {
     }
 
     @Override
-    public void checkDone(Notes note) {
+    public void checkDone(Notes note, Callback<Void> callback) {
         for (NoteRoom noteRoom : notesRoomList) {
             if (noteRoom.idNotes.equals(note.getId())) {
                 noteRoom.doneNotes = !note.isDone();
