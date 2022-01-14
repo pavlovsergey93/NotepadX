@@ -18,17 +18,17 @@ public class FirebaseRepository implements NotesRepository {
     }
 
     @Override
-    public void updateNote(Notes note) {
+    public void updateNote(String noteId,String title, String massage, Callback<Notes> callback) {
 
     }
 
     @Override
-    public void deleteNote(Notes note) {
+    public void deleteNote(Notes note, Callback<Void> callback) {
 
     }
 
     @Override
-    public void checkDone(Notes note) {
+    public void checkDone(Notes note, Callback<Void> callback) {
 
     }
 }

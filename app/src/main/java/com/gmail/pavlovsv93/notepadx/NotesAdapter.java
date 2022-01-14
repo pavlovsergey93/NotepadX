@@ -1,29 +1,34 @@
 package com.gmail.pavlovsv93.notepadx;
 
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gmail.pavlovsv93.notepadx.domain.Notes;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
+    public NotesAdapter(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+
+
     public interface OnClick {
         void onClick(Notes note);
+        void onLongClick(Notes note);
     }
+
+    private Fragment fragment;
 
     private ArrayList<Notes> listData = new ArrayList<>();
 
@@ -37,6 +42,30 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public int addNotes(Notes note) {
         listData.add(note);
         return listData.size();
+    }
+
+    public int updateNote(Notes note) {
+        int index = 0;
+        for (int i = 0; i < listData.size(); i++) {
+            if (listData.get(i).getId().toString().equals(note.getId().toString())){
+                index = i;
+                break;
+            }
+        }
+        listData.set(index,note);
+        return index;
+    }
+
+    public int deleteNote(Notes note) {
+        int index = 0;
+        for (int i = 0; i < listData.size(); i++) {
+            if (listData.get(i).getId().equals(note.getId())){
+                index = i;
+                break;
+            }
+        }
+        listData.remove(index);
+        return index;
     }
 
     @NonNull
@@ -80,11 +109,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            CardView cardView = itemView.findViewById(R.id.card_view);
+
+            fragment.registerForContextMenu(cardView);
+
             title = itemView.findViewById(R.id.card_title);
             massage = itemView.findViewById(R.id.card_massage);
             time = itemView.findViewById(R.id.card_time);
 
-            itemView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
+            //Однократное нажатие на Card
+            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Notes note = listData.get(getAdapterPosition());
@@ -93,6 +127,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                     }
                 }
             });
+
+            //Длительное нажатие на Card, для вызова контекстного меню
+            cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    cardView.showContextMenu();
+                    Notes note = listData.get(getAdapterPosition());
+                    if(getOnClick() != null){
+                        getOnClick().onLongClick(note);
+                    }
+                    return true;
+                }
+            });
+
 
         }
 

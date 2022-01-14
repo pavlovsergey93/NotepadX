@@ -45,4 +45,25 @@ public class NotesPresenter {
         view.noteAddView(note);
         view.hideEmpty();
     }
+
+    public void noteUpdate(Notes note){
+        view.noteUpdateView(note);
+        view.hideEmpty();
+    }
+
+    public void removeNote(Notes note) {
+        view.showProgress();
+        repo.deleteNote(note, new Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                view.highProgress();
+                view.onNoteRemove(note);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                view.highProgress();
+            }
+        });
+    }
 }

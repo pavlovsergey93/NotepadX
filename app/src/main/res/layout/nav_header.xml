@@ -14,7 +14,7 @@
             android:id="@+id/nav_image"
             android:layout_width="@dimen/nav_image_size"
             android:layout_height="@dimen/nav_image_size"
-            android:src="@drawable/ic_user_32"/>
+            android:src="@drawable/ic_outline_account_circle_24"/>
 
     </androidx.cardview.widget.CardView>
 
