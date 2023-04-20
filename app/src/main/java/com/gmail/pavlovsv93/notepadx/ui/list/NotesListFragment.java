@@ -1,10 +1,10 @@
 package com.gmail.pavlovsv93.notepadx.ui.list;
 
-import static com.gmail.pavlovsv93.notepadx.ui.addNote.AddNoteSheetDialogFragment.KEY_ADD_NOTE;
-
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,7 +23,9 @@ import com.gmail.pavlovsv93.notepadx.NotesAdapter;
 import com.gmail.pavlovsv93.notepadx.R;
 import com.gmail.pavlovsv93.notepadx.domain.Notes;
 import com.gmail.pavlovsv93.notepadx.domain.realization_save_data.InMemoryNotesRepository;
+import com.gmail.pavlovsv93.notepadx.ui.addNote.AddNotePresenter;
 import com.gmail.pavlovsv93.notepadx.ui.addNote.AddNoteSheetDialogFragment;
+import com.gmail.pavlovsv93.notepadx.ui.addNote.UpdateNotePresenter;
 
 import java.util.List;
 
@@ -34,6 +36,8 @@ public class NotesListFragment extends Fragment implements NotesView {
 
     private ProgressBar progress;
     private ImageView imageView;
+
+    private Notes selectNote;
 
     private RecyclerView recyclerList;
 
@@ -58,16 +62,18 @@ public class NotesListFragment extends Fragment implements NotesView {
         //presenter = new NotesPresenter(RoomRepository.INSTANCE, this);
         presenter = new NotesPresenter(InMemoryNotesRepository.INSTANCE, this);
 
-        adapter = new NotesAdapter();
+        adapter = new NotesAdapter(this);
         adapter.setOnClick(new NotesAdapter.OnClick() {
             @Override
             public void onClick(Notes note) {
-                Toast.makeText(requireContext(), note.getTitle().toString(), Toast.LENGTH_SHORT).show();
-
                 Bundle data = new Bundle();
                 data.putParcelable(ARG_NOTE, note);
                 getParentFragmentManager().setFragmentResult(KEY_NOTE, data);
+            }
 
+            @Override
+            public void onLongClick(Notes note) {
+                selectNote = note;
             }
         });
 
@@ -92,17 +98,52 @@ public class NotesListFragment extends Fragment implements NotesView {
             }
         });
 
-        getParentFragmentManager().setFragmentResultListener(AddNoteSheetDialogFragment.KEY_ADD_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(AddNotePresenter.KEY_ADD_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
 
-                Notes note = result.getParcelable(AddNoteSheetDialogFragment.ARG_ADD_NOTE);
+                Notes note = result.getParcelable(AddNotePresenter.ARG_ADD_NOTE);
 
                 presenter.noteAdd(note);
 
             }
         });
+        getParentFragmentManager().setFragmentResultListener(UpdateNotePresenter.KEY_UPDATE_NOTE, getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
 
+                Notes note = result.getParcelable(UpdateNotePresenter.ARG_UPDATE_NOTE);
+
+                presenter.noteUpdate(note);
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater mi = requireActivity().getMenuInflater();
+        mi.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_context_update:
+                AddNoteSheetDialogFragment.updateInstance(selectNote)
+                        .show(getParentFragmentManager(), AddNoteSheetDialogFragment.TAG);
+                return true;
+            case R.id.menu_context_delete:
+                presenter.removeNote(selectNote);
+                return true;
+            case R.id.menu_context_share:
+
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -139,7 +180,20 @@ public class NotesListFragment extends Fragment implements NotesView {
 
     @Override
     public void noteAddView(Notes note) {
-        adapter.addNotes(note);
-        adapter.notifyDataSetChanged();
+        int index = adapter.addNotes(note);
+        recyclerList.smoothScrollToPosition(index-1);
+        adapter.notifyItemInserted(index - 1);
+    }
+
+    @Override
+    public void noteUpdateView(Notes note) {
+        int index = adapter.updateNote(note);
+        adapter.notifyItemChanged(index);
+    }
+
+    @Override
+    public void onNoteRemove(Notes note) {
+        int index = adapter.deleteNote(note);
+        adapter.notifyItemRemoved(index);
     }
 }

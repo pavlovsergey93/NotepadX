@@ -8,6 +8,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Notes implements Parcelable {
 
@@ -45,6 +46,10 @@ public class Notes implements Parcelable {
             return new Notes[size];
         }
     };
+
+    public Notes() {
+
+    }
 
     public String getTitle() {
         return title;
@@ -94,5 +99,18 @@ public class Notes implements Parcelable {
         dest.writeString(massage);
         dest.writeString(time);
         dest.writeByte((byte) (done ? 1 : 0));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Notes notes = (Notes) o;
+        return done == notes.done && Objects.equals(id, notes.id) && Objects.equals(title, notes.title) && Objects.equals(massage, notes.massage) && Objects.equals(time, notes.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, massage, time, done);
     }
 }

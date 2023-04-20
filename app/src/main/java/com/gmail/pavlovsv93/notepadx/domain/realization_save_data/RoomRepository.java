@@ -41,7 +41,7 @@ public class RoomRepository implements NotesRepository {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                if(App.getINSTANCE() != null) {
+                if (App.getINSTANCE() != null) {
                     notesRoomList = App.getINSTANCE().noteRoomDao().listNoteAll();
                     for (NoteRoom noteRoom : notesRoomList) {
                         Notes note = new Notes(noteRoom.idNotes,
@@ -79,19 +79,12 @@ public class RoomRepository implements NotesRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void updateNote(Notes note) {
-        for (NoteRoom noteRoom : notesRoomList) {
-            if (noteRoom.idNotes.equals(note.getId())) {
-                noteRoom.titleNotes = note.getTitle();
-                noteRoom.massageNotes = note.getMassage();
-                noteRoom.doneNotes = note.isDone();
-                noteRoom.timeNotes = R.string.update_roon + timeNow();
-            }
-        }
+    public void updateNote(String noteId,String title, String massage, Callback<Notes> callback) {
+
     }
 
     @Override
-    public void deleteNote(Notes note) {
+    public void deleteNote(Notes note, Callback<Void> callback) {
         for (NoteRoom noteRoom : notesRoomList) {
             if (noteRoom.idNotes.equals(note.getId())) {
                 App.getINSTANCE().noteRoomDao().deleteNoteRoom(noteRoom);
@@ -100,7 +93,7 @@ public class RoomRepository implements NotesRepository {
     }
 
     @Override
-    public void checkDone(Notes note) {
+    public void checkDone(Notes note, Callback<Void> callback) {
         for (NoteRoom noteRoom : notesRoomList) {
             if (noteRoom.idNotes.equals(note.getId())) {
                 noteRoom.doneNotes = !note.isDone();

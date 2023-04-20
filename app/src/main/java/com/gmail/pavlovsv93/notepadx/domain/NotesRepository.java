@@ -8,10 +8,10 @@ public interface NotesRepository {
 
     void addNewNote(String title, String massage, Callback<Notes> callback);
 
-    void updateNote(Notes note);
+    void updateNote(String noteId,String title, String massage, Callback<Notes> callback);
 
-    void deleteNote(Notes note);
+    void deleteNote(Notes note, Callback<Void> callback);
 
-    void checkDone(Notes note);
+    void checkDone(Notes note, Callback<Void> callback);
 
 }
